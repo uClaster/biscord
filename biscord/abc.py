@@ -5,7 +5,13 @@ class MessageAble:
     
     async def __maybe_inter(self, **kwargs):
         
-        pass 
+        msg = {"type": 4} 
+        msg["data"] = {k: v for k, v in kwargs.items() if k in ["content", "embed"]}
+        
+        await self.bot.http.request(
+            Route("POST", f"/interactions/{self.inter_id}/{self.token}/callback"), 
+            json = msg 
+            )
     
     async def __common_send(self, ctx = None, **kwargs):
         

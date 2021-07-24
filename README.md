@@ -1,3 +1,8 @@
+# Biscord 
+> Simple button extension for discord.py 
+
+# Example usage 
+```py 
 import discord 
 from discord.ext import commands 
 
@@ -5,11 +10,6 @@ import biscord
 
 bot = commands.Bot(command_prefix = "!", case_insensitive = True) 
 inter = biscord.Bot(bot) 
-
-@bot.event 
-async def on_ready():
-    
-    print("Logging in as %s" % bot.user)
     
 @bot.command() 
 async def button(ctx): 
@@ -37,3 +37,4 @@ async def button(ctx):
         await cbutton.send(content = "That's not good.")
 
 bot.run(TOKEN)  
+``` 

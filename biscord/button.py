@@ -43,12 +43,22 @@ class ButtonInteraction(abc.MessageAble):
     
     def __init__(self, **kwargs):
         
+        self.bot = kwargs.get("bot")
         self._clicked_button = kwargs.get("clicked_button") 
         self._token = kwargs.get("token")
+        self._inter_id = kwargs.get("inter_id")
         
     @property 
     def clicked_button(self):
         return self._clicked_button
+        
+    @property 
+    def token(self):
+        return self._token 
+        
+    @property 
+    def inter_id(self):
+        return self._inter_id 
 
 class Button(abc.MessageAble):
     
@@ -86,7 +96,7 @@ class Button(abc.MessageAble):
         
     async def wait_for_button_click(self, timeout: typing.Union[int, float] = 90) -> biscord.ButtonInteraction:
         
-        _clicked_button: biscord.Button = None 
+        _clicked_button: biscord.ButtonInteraction = None 
         
         while True:
             
@@ -99,6 +109,7 @@ class Button(abc.MessageAble):
                 _clicked_button = ButtonInteraction(
                     bot = self.bot, 
                     token = d["token"], 
+                    inter_id = d["id"], 
                     clicked_button = d["data"]["custom_id"]
                     )
                     
