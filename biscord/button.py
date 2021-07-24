@@ -5,7 +5,10 @@ inter = biscord.add_action_row(
         )
 """ 
 
+from __future__ import annotations 
+from . import abc
 from discord.http import Route
+import typing 
 
 class ButtonStyle: 
     
@@ -30,8 +33,24 @@ class ButtonStyle:
     def red(cls):
         
         return 4 
+        
+class ButtonInteraction(abc.MessageAble):
+    
+    """ 
+    Represent a clicked button that has been made with interaction. 
+        Returned by :: interaction.wait_for_button_click :: 
+    """ 
+    
+    def __init__(self, **kwargs):
+        
+        self._clicked_button = kwargs.get("clicked_button") 
+        self._token = kwargs.get("token")
+        
+    @property 
+    def clicked_button(self):
+        return self._clicked_button
 
-class Button:
+class Button(abc.MessageAble):
     
     """ Represent a button Object 
     Returned by :: interaction.new_button :: 
@@ -43,18 +62,18 @@ class Button:
         self.component = []
         self.http = None 
     
-    def add_action_row(self, *func):
+    def add_action_row(self, *func) -> Button:
         
         action_row = {
             "type": 1, 
-            "components": [f for f in func] 
+            "components": list(func) 
         }
         
         self.component.append(action_row)
         
         return self  
         
-    def add_button(self, **kwargs):
+    def add_button(self, **kwargs) -> Button:
         
         expected = ["label", "style", "custom_id"]
         
@@ -65,27 +84,24 @@ class Button:
         
         return btn 
         
-    async def send(self, ctx, **kwargs):
+    async def wait_for_button_click(self, timeout: typing.Union[int, float] = 90) -> biscord.ButtonInteraction:
         
-        msg = {}
-        
-        if kwargs.get("content") == None and kwargs.get("embed") == None:
-            
-            raise TypeError("Invalid form body.") 
-            
-        msg = {k: v for k, v in kwargs.items() if k in ["content", "embed", "components"]}    
-        
-        await self.bot.http.request(
-            Route("POST", f"/channels/{ctx.channel.id}/messages"), 
-            json = msg 
-            )
-            
-    async def wait_for_button_click(self):
+        _clicked_button: biscord.Button = None 
         
         while True:
             
-            message = await self.bot.wait_for("socket_response") 
+            message = await self.bot.wait_for("socket_response", timeout = timeout) 
             
-            print(message) 
+            t, d = message.get("t"), message.get("d")
+            
+            if t == "INTERACTION_CREATE":
+                
+                _clicked_button = ButtonInteraction(
+                    bot = self.bot, 
+                    token = d["token"], 
+                    clicked_button = d["data"]["custom_id"]
+                    )
+                    
+                break     
         
-        return 
+        return _clicked_button

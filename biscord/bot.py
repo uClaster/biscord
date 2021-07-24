@@ -12,7 +12,7 @@ class Bot:
         
         self.bot = bot
         
-    def new_button(self):
+    def new_button(self) -> biscord.Button:
         
         self.new_inter = Button(self.bot)
         

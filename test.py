@@ -2,8 +2,6 @@ import discord
 from discord.ext import commands 
 
 import biscord 
-import json # For debug purposes 
-import zlib 
 
 bot = commands.Bot(command_prefix = "!", case_insensitive = True) 
 inter = biscord.Bot(bot) 
@@ -28,6 +26,10 @@ async def button(ctx):
         components = interaction.component 
     )    
     
-    await interaction.wait_for_button_click() 
+    cbutton = await interaction.wait_for_button_click() 
+    
+    if cbutton.clicked_button == "plot":
+        
+        await ctx.send("ouch!")
 
 bot.run("ODQ5MTIxNDEyNjE4MjU2NDE3.YLWj8A.D6xmmHk3s1g9OKCrR87Fm7y8IbA")  
