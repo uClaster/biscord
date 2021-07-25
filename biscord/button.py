@@ -1,10 +1,4 @@
-
-""" TODO 
-inter = biscord.add_action_row(
-            biscord.add_button(label = '', style = 1, custom_id = 'gottem')
-        )
-""" 
-
+ 
 from __future__ import annotations 
 from . import abc
 from discord.http import Route

@@ -36,4 +36,4 @@ async def button(ctx):
         
         await cbutton.send(content = "That's not good.")
 
-bot.run(TOKEN)  
+bot.run("ODQ5MTIxNDEyNjE4MjU2NDE3.YLWj8A.dx-O_T6gP6Qqxbv8R6Nrjv_9K6Q")  

@@ -3,27 +3,6 @@ from discord.http import Route
 
 class MessageAble: 
     
-    async def __maybe_inter(self, **kwargs):
-        
-        msg = {"type": 4} 
-        msg["data"] = {k: v for k, v in kwargs.items() if k in ["content", "embed"]}
-        
-        await self.bot.http.request(
-            Route("POST", f"/interactions/{self.inter_id}/{self.token}/callback"), 
-            json = msg 
-            )
-    
-    async def __common_send(self, ctx = None, **kwargs):
-        
-        if ctx is None: raise TypeError("Unknown destination.") 
-        
-        msg = {k: v for k, v in kwargs.items() if k in ["content", "embed", "components"]}
-        
-        await self.bot.http.request(
-            Route("POST", f"/channels/{ctx.channel.id}/messages"), 
-            json = msg 
-            )
-    
     async def send(self, ctx = None, **kwargs):
         
         """ 
@@ -33,6 +12,23 @@ class MessageAble:
         if kwargs.get("content") == None and kwargs.get("embed") == None:
             raise TypeError("Invalid form body.") 
             
-        class_name = self.__class__.__name__     
+        endpoint: str = ""     
+        message_payload: dict = {} 
+            
+        if self.__class__.__name__ == "Button": 
+            
+            if ctx is None: raise TypeError("Unknown destination.") 
+            
+            endpoint = f"/channels/{ctx.channel.id}/messages"
+            
+            message_payload = kwargs 
+            
+        else:
+            endpoint = f"/interactions/{self.inter_id}/{self.token}/callback" 
+            
+            message_payload["type"], message_payload["data"] = 4, kwargs
         
-        await self.__maybe_inter(**kwargs) if class_name == "ButtonInteraction" else await self.__common_send(ctx, **kwargs)
+        await self.bot.http.request(
+            Route("POST", endpoint), 
+            json = message_payload 
+            )
