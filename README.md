@@ -6,7 +6,7 @@
 import discord 
 from discord.ext import commands 
 
-import biscord 
+import biscord # You should able to locate the module file in your repository.
 
 bot = commands.Bot(command_prefix = "!", case_insensitive = True) 
 inter = biscord.Bot(bot) 
