@@ -23,17 +23,21 @@ async def button(ctx):
     await interaction.send(
         ctx, 
         content = "Button Interaction Test", 
-        components = interaction.component 
+        components = interaction.components 
     )    
     
     cbutton = await interaction.wait_for_button_click() 
     
     if cbutton.clicked_button == "plot":
         
-        await cbutton.send(content = "Good.")
+        embed = discord.Embed(title = "good", description = "smart", color = discord.Colour.green())
+        
+        await cbutton.send(content = "correct.", embed = embed)
         
     elif cbutton.clicked_button == "danger":
         
-        await cbutton.send(content = "That's not good.")
+        embed = discord.Embed(title = "Bruh", description = "Incorrect button.", color = discord.Colour.red())
+        
+        await cbutton.send(embed = embed)
 
-bot.run("ODQ5MTIxNDEyNjE4MjU2NDE3.YLWj8A.dx-O_T6gP6Qqxbv8R6Nrjv_9K6Q")  
+bot.run(TOKEN)  

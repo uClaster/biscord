@@ -10,22 +10,18 @@ class ButtonStyle:
     
     @classmethod 
     def blurple(cls):
-        
         return 1 
         
     @classmethod 
     def grey(cls):
-        
         return 2 
         
     @classmethod 
     def green(cls):
-        
         return 3 
         
     @classmethod 
     def red(cls):
-        
         return 4 
         
 class ButtonInteraction(abc.MessageAble):
@@ -63,7 +59,7 @@ class Button(abc.MessageAble):
     def __init__(self, bot):
         
         self.bot = bot 
-        self.component = []
+        self.components = []
         self.http = None 
     
     def add_action_row(self, *func) -> Button:
@@ -73,7 +69,7 @@ class Button(abc.MessageAble):
             "components": list(func) 
         }
         
-        self.component.append(action_row)
+        self.components.append(action_row)
         
         return self  
         
@@ -84,11 +80,12 @@ class Button(abc.MessageAble):
         btn = {"type": 2}  
         
         for k, v in kwargs.items():
-            if k in expected: btn[k] = v 
+            if k in expected: 
+                btn[k] = v 
         
         return btn 
         
-    async def wait_for_button_click(self, timeout: typing.Union[int, float] = 90) -> biscord.ButtonInteraction:
+    async def wait_for_button_click(self, timeout: typing.Union[int, float]=90) -> biscord.ButtonInteraction:
         
         _clicked_button: biscord.ButtonInteraction = None 
         
